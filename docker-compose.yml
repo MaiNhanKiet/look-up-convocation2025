@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  # 🍃 MongoDB Database
+  mongo:
+    image: mongo:latest
+    container_name: convocation2025_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: kietmn
+      MONGO_INITDB_ROOT_PASSWORD: kietdeptrai123
+    ports:
+      - "27017:27017" # Cổng mặc định của MongoDB
+    volumes:
+      - mongo_data:/data/db # MongoDB lưu dữ liệu trong /data/db
+    networks:
+      - convocation2025
+
+  # 🛠 Backend service (Node + TypeScript)
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    container_name: convocation2025_backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      # Đã cập nhật DATABASE_URL cho MongoDB
+      - DATABASE_URL=mongodb://kietmn:kietdeptrai123@convocation2025_mongo:27017/fpt_vote?authSource=admin
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo # Thay đổi phụ thuộc từ postgres sang mongo
+    networks:
+      - convocation2025
+
+  # 🌐 Frontend service (Next.js)
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: convocation2025_frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - convocation2025
+
+# 📦 Lưu trữ dữ liệu
+volumes:
+  mongo_data: # Đổi volume từ postgres_data sang mongo_data
+
+# 🌐 Network chung
+networks:
+  convocation2025:
+    driver: bridge
