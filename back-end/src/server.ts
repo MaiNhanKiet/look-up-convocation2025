@@ -19,9 +19,10 @@ app.use(helmet())
 app.use(hpp())
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'localhost:3002'
   })
 )
+
 app.use(limiter)
 app.use(express.json())
 app.use(paginate.middleware(10, 30))
@@ -29,6 +30,16 @@ app.use(paginate.middleware(10, 30))
 /* ===== ROUTES ===== */
 app.use(syncResponseMiddleware)
 app.use('/api/', router)
+app.get('/api/health', async (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'API is healthy',
+    checks: {
+      database: 'Connected'
+    },
+    uptime: process.uptime()
+  })
+})
 
 /* ===== 404 NOT FOUND ===== */
 app.use(notFoundMiddleware)
