@@ -5,6 +5,7 @@ import { TokenGoogleVerifyPayload, TokenPayLoad } from '~/models/TokenPayoad'
 declare global {
   namespace Express {
     interface Request {
+      decoded_authorization?: TokenPayLoad
       auditContext?: {
         action: ActionType
         resource: ResourceType

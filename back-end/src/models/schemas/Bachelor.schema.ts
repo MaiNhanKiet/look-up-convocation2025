@@ -9,7 +9,7 @@ interface SessionType {
 
 // Interface cho images
 interface ImagesType {
-  intro: string
+  led: string
   exhibit: string
 }
 

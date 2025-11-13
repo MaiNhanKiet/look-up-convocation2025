@@ -257,7 +257,7 @@ export default function StudentInfoPage() {
                 <div className='p-4 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 text-center'>
                   <p className='text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3'>Ảnh trao bằng</p>
                   <Button asChild className='bg-orange-500 hover:bg-orange-600 text-white gap-2'>
-                    <a href={studentData.images.intro} target='_blank' rel='noopener noreferrer'>
+                    <a href={studentData.images.led} target='_blank' rel='noopener noreferrer'>
                       <ImageIcon className='h-4 w-4' />
                       Xem ảnh
                     </a>

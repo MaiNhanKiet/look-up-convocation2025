@@ -9,7 +9,7 @@ export interface StudentSession {
 }
 
 export interface StudentImages {
-  intro: string
+  led: string
   exhibit: string
 }
 
