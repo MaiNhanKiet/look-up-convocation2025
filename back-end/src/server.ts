@@ -19,7 +19,7 @@ app.use(helmet())
 app.use(hpp())
 app.use(
   cors({
-    origin: '*'
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
   })
 )
 app.use(limiter)

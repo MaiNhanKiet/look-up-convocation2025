@@ -29,10 +29,11 @@ services:
       - DATABASE_URL=mongodb://kietmn:kietdeptrai123@convocation2025_mongo:27017/convocation2025?authSource=admin
       - DB_NAME=convocation2025
       - DB_BACHELOR_COLLECTION=bachelors
+      - CORS_ORIGIN=srofptuhcm.com
     ports:
       - "8080:8080"
     depends_on:
-      - mongo 
+      - mongo
     networks:
       - convocation2025
 
@@ -45,10 +46,10 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/
+      - PORT=3002
+      - NEXT_PUBLIC_API_URL=http://143.198.84.82:8080/
     ports:
-      - "3000:3000"
+      - "3002:3002"
     depends_on:
       - backend
     networks:
