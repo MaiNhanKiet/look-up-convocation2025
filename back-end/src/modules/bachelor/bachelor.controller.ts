@@ -1,10 +1,8 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 import { Request, Response, NextFunction } from 'express'
-import { logEvent } from '~/utils/logger'
-import { ActionLog, AuditStatusLog, ResourceLog } from '~/constants/enum'
 import bachelorServices from './bachelor.service'
 import { ApproveRequestBody, GetBachelorRequestQuery, requestBody } from '~/interfaces/request/bachelor.requests'
-import { ErrorWithStatus } from '~/models/Errors'
+import { omit } from 'lodash'
 
 export const getBachelorController = async (
   req: Request<ParamsDictionary, any, any, GetBachelorRequestQuery>,
@@ -17,7 +15,7 @@ export const getBachelorController = async (
   res.sendResponse({
     statusCode: 200,
     message: 'Lấy thông tin tân cử nhân thành công',
-    data
+    data: omit(data, ['requests'])
   })
 }
 

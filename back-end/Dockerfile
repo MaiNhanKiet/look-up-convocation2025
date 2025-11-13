@@ -17,11 +17,10 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json* ./
 RUN npm install --production --legacy-peer-deps || true
 
-# Copy built output and prisma (if present)
+# Copy built output
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 
-EXPOSE 4000
-ENV PORT=4000
+EXPOSE 8080
+ENV PORT=8080
 
 CMD ["node", "dist/server.js"]

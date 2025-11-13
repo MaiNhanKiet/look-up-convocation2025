@@ -45,24 +45,24 @@ const startServer = async () => {
     checkDbConnection()
 
     app.listen(PORT, () => {
-      logEvent({
-        actor: {},
-        action: ActionLog.Server,
-        resource: ResourceLog.System,
-        status: AuditStatusLog.Success,
-        details: { message: `Server started on port ${PORT}` }
-      })
+      // logEvent({
+      //   actor: {},
+      //   action: ActionLog.Server,
+      //   resource: ResourceLog.System,
+      //   status: AuditStatusLog.Success,
+      //   details: { message: `Server started on port ${PORT}` }
+      // })
       console.log(`\x1b[34mPROJECT OPEN ON PORT: \x1b[31m${PORT}\x1b[0m`)
     })
   } catch (error) {
-    logEvent({
-      actor: {},
-      action: ActionLog.Server,
-      resource: ResourceLog.System,
-      status: AuditStatusLog.Failure,
-      details: { message: `Server failed to start on port ${PORT}` },
-      error: error as Error
-    })
+    // logEvent({
+    //   actor: {},
+    //   action: ActionLog.Server,
+    //   resource: ResourceLog.System,
+    //   status: AuditStatusLog.Failure,
+    //   details: { message: `Server failed to start on port ${PORT}` },
+    //   error: error as Error
+    // })
     process.exit(1)
   }
 }

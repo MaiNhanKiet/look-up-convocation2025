@@ -1,7 +1,4 @@
-import { Request } from 'express'
 import { checkSchema } from 'express-validator'
-import { AUTH_MESSAGES } from '~/constants/messages'
-import { verifyGoogleToken } from '~/utils/handler'
 import { validate } from '~/utils/validation'
 
 export const bachelorValidator = validate(
@@ -9,14 +6,14 @@ export const bachelorValidator = validate(
     {
       studentId: {
         notEmpty: {
-          errorMessage: 'Student ID is required'
+          errorMessage: 'Mã số tân cử nhân bị bỏ trống'
         },
         trim: true,
         custom: {
           options: async (value, { req }) => {
             const regex = /^[HCSQD][ESA]\d{6}$/
             if (!regex.test(value)) {
-              throw new Error('Student ID is invalid')
+              throw new Error('Mã số tân cử nhân không hợp lệ')
             }
           }
         }
@@ -31,14 +28,14 @@ export const requestValidator = validate(
     studentId: {
       in: ['params'],
       notEmpty: {
-        errorMessage: 'Student ID is required'
+        errorMessage: 'Mã số tân cử nhân bị bỏ trống'
       },
       trim: true,
       custom: {
         options: async (value, { req }) => {
           const regex = /^[HCSQD][ESA]\d{6}$/
           if (!regex.test(value)) {
-            throw new Error('Student ID is invalid')
+            throw new Error('Mã số tân cử nhân không hợp lệ')
           }
         }
       }
@@ -46,10 +43,10 @@ export const requestValidator = validate(
     newImageUrl: {
       in: ['body'],
       notEmpty: {
-        errorMessage: 'New image URL is required'
+        errorMessage: 'Link ảnh mới bị bỏ trống'
       },
       isURL: {
-        errorMessage: 'New image URL must be a valid URL'
+        errorMessage: 'Link ảnh mới không hợp lệ'
       },
       trim: true
     },
@@ -58,11 +55,11 @@ export const requestValidator = validate(
       optional: true,
       trim: true,
       isString: {
-        errorMessage: 'Note must be a string'
+        errorMessage: 'Ghi chú phải là chuỗi ký tự'
       },
       isLength: {
         options: { max: 500 },
-        errorMessage: 'Note must be at most 500 characters long'
+        errorMessage: 'Ghi chú quá dài'
       }
     }
   })
@@ -73,14 +70,14 @@ export const approveValidator = validate(
     studentId: {
       in: ['params'],
       notEmpty: {
-        errorMessage: 'Student ID is required'
+        errorMessage: 'Mã số tân cử nhân bị bỏ trống'
       },
       trim: true,
       custom: {
         options: async (value, { req }) => {
           const regex = /^[HCSQD][ESA]\d{6}$/
           if (!regex.test(value)) {
-            throw new Error('Student ID is invalid')
+            throw new Error('Mã số tân cử nhân không hợp lệ')
           }
         }
       }
@@ -89,16 +86,16 @@ export const approveValidator = validate(
       in: ['body'],
       trim: true,
       notEmpty: {
-        errorMessage: 'Status is required'
+        errorMessage: 'Trạng thái bị bỏ trống'
       },
       isString: {
-        errorMessage: 'Status must be a string'
+        errorMessage: 'Trạng thái phải là chuỗi'
       },
       custom: {
         options: async (value, { req }) => {
           const validStatuses = ['approved', 'rejected']
           if (!validStatuses.includes(value)) {
-            throw new Error('Status must be either approved or rejected')
+            throw new Error('Trạng thái sai định dạng')
           }
         }
       }

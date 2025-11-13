@@ -7,6 +7,6 @@ const bachelorRouter = express.Router()
 
 bachelorRouter.get('/:studentId', bachelorValidator, wrapAsync(getBachelorController))
 bachelorRouter.post('/:studentId/request-image', requestValidator, wrapAsync(requestController))
-bachelorRouter.put('/approve/:studentId', approveValidator, wrapAsync(approveController))
+// bachelorRouter.put('/approve/:studentId', approveValidator, wrapAsync(approveController))
 
 export default bachelorRouter

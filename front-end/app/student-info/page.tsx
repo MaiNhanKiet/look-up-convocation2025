@@ -91,13 +91,7 @@ export default function StudentInfoPage() {
         setShowWrongImageForm(false)
       }
     } catch (error: any) {
-      console.log(error)
-      console.log(error.response)
-      toast.error(
-        error.response.data.message ||
-          error.response.data.error.details[0].message ||
-          'Đã xảy ra lỗi, vui lòng thử lại sau!'
-      )
+      toast.error(error.response.data.error.details[0].message || 'Đã xảy ra lỗi, vui lòng thử lại sau!')
     }
   }
 
@@ -195,7 +189,7 @@ export default function StudentInfoPage() {
               <div className='flex flex-wrap gap-2 mb-4'>
                 <Badge className='px-4 py-2 text-sm border border-orange-500 text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-950/30'>
                   <Calendar className='h-4 w-4 mr-2' />
-                  {studentData.date}
+                  {studentData.date.split('T')[0].split('-').reverse().join('/')}
                 </Badge>
                 <Badge className='px-4 py-2 text-sm border border-green-500 text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-950/30'>
                   <MapPin className='h-4 w-4 mr-2' />
@@ -310,9 +304,7 @@ export default function StudentInfoPage() {
                     name='requestedImageUrl'
                     control={control}
                     rules={{ required: 'Vui lòng nhập Link ảnh' }}
-                    render={({ field }) => (
-                      <Input {...field} placeholder='Nhập link ảnh chân dung' className='text-lg' />
-                    )}
+                    render={({ field }) => <Input {...field} placeholder='...' className='text-lg' />}
                   />
                   {errors.requestedImageUrl && (
                     <p className='text-sm text-red-500'>{errors.requestedImageUrl?.message}</p>
