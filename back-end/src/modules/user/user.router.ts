@@ -5,5 +5,10 @@ import { googleLoginController } from './user.controller'
 
 const userRouter = express.Router()
 
+/**
+ * @route POST /user/google-login
+ * @description Đăng nhập bằng Google
+ * @access Public
+ */
 userRouter.post('/google-login', googleLoginValidator, wrapAsync(googleLoginController))
 export default userRouter
