@@ -79,123 +79,19 @@ class BachelorServices {
     return result
   }
 
-  private validateImportPayload(payload: any, index: number): BachelorImportPayload {
-    if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
-      throw new ErrorWithStatus({
-        statusCode: HTTP_STATUS.BAD_REQUEST,
-        message: `Dữ liệu tại vị trí ${index} không hợp lệ.`,
-        name: 'InvalidBachelorPayloadError'
-      })
-    }
-
-    const stringFields: Array<keyof BachelorImportPayload> = [
-      'studentId',
-      'fullName',
-      'email',
-      'major',
-      'faculty',
-      'date',
-      'hall',
-      'seat',
-      'parentSeat'
-    ]
-
-    stringFields.forEach((field) => {
-      const value = payload[field]
-      if (typeof value !== 'string' || !value.trim()) {
-        throw new ErrorWithStatus({
-          statusCode: HTTP_STATUS.BAD_REQUEST,
-          message: `Trường ${String(field)} tại vị trí ${index} phải là chuỗi và không được bỏ trống.`,
-          name: 'InvalidBachelorPayloadError'
-        })
-      }
-    })
-
-    if (typeof payload.session !== 'object' || payload.session === null) {
-      throw new ErrorWithStatus({
-        statusCode: HTTP_STATUS.BAD_REQUEST,
-        message: `Thông tin session tại vị trí ${index} không hợp lệ.`,
-        name: 'InvalidBachelorPayloadError'
-      })
-    }
-
-    const { session } = payload
-
-    if (typeof session.number !== 'number' || Number.isNaN(session.number)) {
-      throw new ErrorWithStatus({
-        statusCode: HTTP_STATUS.BAD_REQUEST,
-        message: `Session number tại vị trí ${index} phải là số.`,
-        name: 'InvalidBachelorPayloadError'
-      })
-    }
-
-    ;['checkin', 'presentation'].forEach((key) => {
-      const value = session[key]
-      if (typeof value !== 'string' || !value.trim()) {
-        throw new ErrorWithStatus({
-          statusCode: HTTP_STATUS.BAD_REQUEST,
-          message: `Session ${key} tại vị trí ${index} phải là chuỗi và không được bỏ trống.`,
-          name: 'InvalidBachelorPayloadError'
-        })
-      }
-    })
-
-    if (typeof payload.images !== 'object' || payload.images === null) {
-      throw new ErrorWithStatus({
-        statusCode: HTTP_STATUS.BAD_REQUEST,
-        message: `Thông tin images tại vị trí ${index} không hợp lệ.`,
-        name: 'InvalidBachelorPayloadError'
-      })
-    }
-
-    const { images } = payload
-
-      ;['led', 'exhibit'].forEach((key) => {
-        const value = images[key]
-        if (typeof value !== 'string' || !value.trim()) {
-          throw new ErrorWithStatus({
-            statusCode: HTTP_STATUS.BAD_REQUEST,
-            message: `Ảnh ${key} tại vị trí ${index} phải là chuỗi và không được bỏ trống.`,
-            name: 'InvalidBachelorPayloadError'
-          })
-        }
-      })
-
-    return {
-      studentId: payload.studentId.trim(),
-      fullName: payload.fullName.trim(),
-      email: payload.email.trim(),
-      major: payload.major.trim(),
-      faculty: payload.faculty.trim(),
-      date: payload.date.trim(),
-      hall: payload.hall.trim(),
-      seat: payload.seat.trim(),
-      parentSeat: payload.parentSeat.trim(),
-      session: {
-        number: session.number,
-        checkin: session.checkin.trim(),
-        presentation: session.presentation.trim()
-      },
-      images: {
-        led: images.led.trim(),
-        exhibit: images.exhibit.trim()
-      }
-    }
-  }
-
-  async addMissingInformation
-    ({ studentId,
-      fullName,
-      email,
-      phoneNumber,
-      note
-    }: {
-      studentId: string;
-      fullName: string;
-      email: string;
-      phoneNumber: string;
-      note: string
-    }) {
+  async addMissingInformation({
+    studentId,
+    fullName,
+    email,
+    phoneNumber,
+    note
+  }: {
+    studentId: string
+    fullName: string
+    email: string
+    phoneNumber: string
+    note: string
+  }) {
     const missingInformation = await mongo.missingInformation.findOne({ studentId: studentId, status: 'pending' })
     if (missingInformation) {
       throw new ErrorWithStatus({
@@ -206,7 +102,13 @@ class BachelorServices {
     }
     await mongo.missingInformation.insertOne(
       new MissingInformation({
-        studentId, fullName, email, phoneNumber, note, status: 'pending', createdAt: new Date()
+        studentId,
+        fullName,
+        email,
+        phoneNumber,
+        note,
+        status: 'pending',
+        createdAt: new Date()
       })
     )
   }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 // 'https://api.srofptuhcm.com/'
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://api.srofptuhcm.com/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

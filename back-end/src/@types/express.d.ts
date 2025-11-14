@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     interface Request {
       decoded_authorization?: TokenPayLoad
+      decoded_google_verify_token?: TokenGoogleVerifyPayload
       auditContext?: {
         action: ActionType
         resource: ResourceType
