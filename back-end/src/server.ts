@@ -20,11 +20,11 @@ app.use(hpp())
 app.use(
   cors({
     // origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'localhost:3002'
-    origin: '*'
+    origin: 'https://tracuuthongtin.srofptuhcm.com'
   })
 )
 
-app.use(limiter)
+// app.use(limiter)
 app.use(express.json())
 app.use(paginate.middleware(10, 30))
 
