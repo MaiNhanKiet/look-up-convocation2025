@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
-import * as jwt_decode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,20 +16,28 @@ export default function LoginPage() {
   useEffect(() => {
     const storedUser = sessionStorage.getItem('user')
     if (storedUser) {
-      router.push('/page') // Nếu đã login, chuyển thẳng đến /page
+      // router.push('/')
     }
   }, [router])
 
   const handleLoginSuccess = (response: any) => {
+    const credential = response.credential
+    console.log('Google credential:', credential)
+
     setIsLoading(true)
+
     try {
-      const decoded: any = (jwt_decode as any)(response.credential)
+      const decoded: any = jwtDecode(credential)
+      console.log('Decoded token:', decoded)
+
       sessionStorage.setItem('user', JSON.stringify(decoded))
+
       setTimeout(() => {
         setIsLoading(false)
-        router.push('/page')
+        // router.push('/')
       }, 500)
     } catch (error) {
+      console.error(error)
       setErrorMessage('Đăng nhập thất bại. Vui lòng thử lại!')
       setIsLoading(false)
     }
