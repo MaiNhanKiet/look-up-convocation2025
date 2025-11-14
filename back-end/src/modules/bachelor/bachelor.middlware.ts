@@ -214,22 +214,6 @@ export const requestInfoValidator = validate(
         errorMessage: 'Email không hợp lệ'
       }
     },
-    major: {
-      in: ['body'],
-      optional: true,
-      trim: true,
-      isString: {
-        errorMessage: 'Chuyên ngành phải là chuỗi'
-      }
-    },
-    faculty: {
-      in: ['body'],
-      optional: true,
-      trim: true,
-      isString: {
-        errorMessage: 'Khối ngành phải là chuỗi'
-      }
-    },
     note: {
       in: ['body'],
       optional: true,

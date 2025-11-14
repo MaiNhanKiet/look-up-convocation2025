@@ -44,7 +44,5 @@ export interface MissingInformationBody {
 export interface RequestInfoBody {
   fullName: string
   email: string
-  major: string
-  faculty: string
   note: string
 }

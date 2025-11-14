@@ -50,8 +50,7 @@ class BachelorServices {
             type: 'image',
             createdAt: new Date()
           }
-        },
-        $set: { isRequested: true }
+        }
       }
     )
   }
@@ -118,15 +117,11 @@ class BachelorServices {
     studentId,
     fullName,
     email,
-    major,
-    faculty,
     note
   }: {
     studentId: string
     fullName: string
     email: string
-    major: string
-    faculty: string
     note: string
   }) {
     const bachelor = await bachelorServices.findBachelorById(studentId)
@@ -154,15 +149,12 @@ class BachelorServices {
           requests: {
             fullName,
             email,
-            major,
-            faculty,
             note,
             status: 'pending',
             type: 'information',
             createdAt: new Date()
           }
-        },
-        $set: { isRequested: true }
+        }
       }
     )
   }

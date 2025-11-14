@@ -82,7 +82,7 @@ export const searchApi = {
   },
   sendRequestInformation: async (
     studentId: string,
-    data: { fullName: string; email: string; major: string; faculty: string; note?: string }
+    data: { fullName: string; email: string; note?: string }
   ): Promise<MissingInformationResponse> => {
     const response = await axiosInstance.post<MissingInformationResponse>(
       `/api/bachelor/${studentId}/request-information`,

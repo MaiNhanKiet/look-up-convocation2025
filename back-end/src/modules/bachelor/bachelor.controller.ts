@@ -81,9 +81,9 @@ export const requestInfoController = async (
   next: NextFunction
 ) => {
   const { studentId } = req.params
-  const { fullName, email, major, faculty, note } = req.body
+  const { fullName, email, note } = req.body
 
-  await bachelorServices.addInfoRequest({ studentId, fullName, email, major, faculty, note })
+  await bachelorServices.addInfoRequest({ studentId, fullName, email, note })
   res.sendResponse({
     statusCode: 200,
     message: 'Đã gửi yêu cầu thành công',

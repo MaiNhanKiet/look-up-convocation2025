@@ -67,8 +67,6 @@ export default function StudentInfoPage() {
       studentId: studentData?.studentId ?? '',
       fullName: studentData?.fullName ?? '',
       email: studentData?.email ?? '',
-      major: studentData?.major ?? '',
-      faculty: studentData?.faculty ?? '',
       note: ''
     }
   })
@@ -88,8 +86,6 @@ export default function StudentInfoPage() {
         studentId: studentData.studentId,
         fullName: studentData.fullName,
         email: studentData.email,
-        major: studentData.major,
-        faculty: studentData.faculty,
         note: ''
       })
     }
@@ -152,8 +148,6 @@ export default function StudentInfoPage() {
       const response = await searchApi.sendRequestInformation(studentData!.studentId, {
         fullName: data.fullName,
         email: data.email,
-        major: data.major,
-        faculty: data.faculty,
         note: data.note || undefined
       })
       if (response.success) {
@@ -163,8 +157,6 @@ export default function StudentInfoPage() {
           studentId: studentData?.studentId ?? '',
           fullName: studentData?.fullName ?? '',
           email: studentData?.email ?? '',
-          major: studentData?.major ?? '',
-          faculty: studentData?.faculty ?? '',
           note: ''
         })
         setShowWrongInfoForm(false)
@@ -536,24 +528,6 @@ export default function StudentInfoPage() {
                       </motion.p>
                     )}
                   </div>
-
-                  <div className='flex flex-col gap-2'>
-                    <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Chuyên ngành</label>
-                    <Controller
-                      name='major'
-                      control={infoControl}
-                      render={({ field }) => <Input {...field} placeholder='Chuyên ngành' className='text-sm' />}
-                    />
-                  </div>
-                </div>
-
-                <div className='flex flex-col gap-2'>
-                  <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Khối ngành</label>
-                  <Controller
-                    name='faculty'
-                    control={infoControl}
-                    render={({ field }) => <Input {...field} placeholder='Khối ngành' className='text-sm' />}
-                  />
                 </div>
 
                 <div className='flex flex-col gap-2'>
