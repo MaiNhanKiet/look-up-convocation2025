@@ -76,7 +76,7 @@ export default function Home() {
         setIsNotFoundError(true)
         setErrorMessage('Không tìm thấy thông tin sinh viên')
       } else {
-        setErrorMessage('Không tìm thấy thông tin sinh viên')
+        setErrorMessage('Server đang bận, vui lòng thử lại sau!')
         setIsNotFoundError(false)
       }
     } finally {
