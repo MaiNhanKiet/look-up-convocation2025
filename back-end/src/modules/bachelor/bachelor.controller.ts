@@ -20,10 +20,19 @@ export const getBachelorController = async (
   const { studentId } = req.params
 
   const data = await bachelorServices.findBachelorById(studentId)
+
+  // 1. Loại bỏ trường 'requests' khỏi dữ liệu gốc
+  // Giả sử omit trả về một đối tượng mới
+  const responseData: any = omit(data, ['requests'])
+
+  // 2. Ghi đè giá trị của trường email
+  // (Sử dụng 'any' tạm thời nếu bạn gặp lỗi TypeScript về việc thêm/ghi đè thuộc tính)
+  responseData.email = "***********"
+
   res.sendResponse({
     statusCode: 200,
     message: 'Lấy thông tin tân cử nhân thành công',
-    data: omit(data, ['requests'])
+    data: responseData
   })
 }
 
