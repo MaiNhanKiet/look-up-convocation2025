@@ -27,7 +27,7 @@ export const getBachelorController = async (
 
   // 2. Ghi đè giá trị của trường email
   // (Sử dụng 'any' tạm thời nếu bạn gặp lỗi TypeScript về việc thêm/ghi đè thuộc tính)
-  responseData.email = "***********"
+  responseData.email = "abc@gmail.com"
 
   res.sendResponse({
     statusCode: 200,
