@@ -20,14 +20,30 @@ export const getBachelorController = async (
   const { studentId } = req.params
 
   const data = await bachelorServices.findBachelorById(studentId)
+  
+  // Lấy email gốc từ dữ liệu
+  const originalEmail: string = data?.email || ''; 
+  let maskedEmail: string;
+
+  // --- LOGIC CHE GIẤU EMAIL ---
+  const atIndex = originalEmail.indexOf('@');
+
+  if (atIndex > 0) {
+    // Nếu tìm thấy '@', che giấu phần tên người dùng và giữ lại domain
+    // Ví dụ: nguyenvana@fpt.edu.vn sẽ thành ***@fpt.edu.vn
+    const domainPart = originalEmail.substring(atIndex); 
+    maskedEmail = `***${domainPart}`; 
+  } else {
+    // Nếu không có email hoặc email không hợp lệ
+    maskedEmail = 'KHÔNG CÓ EMAIL';
+  }
+  // -----------------------------
 
   // 1. Loại bỏ trường 'requests' khỏi dữ liệu gốc
-  // Giả sử omit trả về một đối tượng mới
   const responseData: any = omit(data, ['requests'])
 
-  // 2. Ghi đè giá trị của trường email
-  // (Sử dụng 'any' tạm thời nếu bạn gặp lỗi TypeScript về việc thêm/ghi đè thuộc tính)
-  responseData.email = "abc@gmail.com"
+  // 2. Ghi đè giá trị của trường email bằng email đã che giấu
+  responseData.email = maskedEmail
 
   res.sendResponse({
     statusCode: 200,
