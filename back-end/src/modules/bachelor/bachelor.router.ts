@@ -3,6 +3,7 @@ import {
   approveValidator,
   bachelorValidator,
   missingInformationValidator,
+  requestInfoValidator,
   requestValidator
 } from './bachelor.middlware'
 import { wrapAsync } from '~/utils/handler'
@@ -30,7 +31,7 @@ bachelorRouter.post('/:studentId/request-image', requestValidator, wrapAsync(req
 
 /**
  * @route POST /bachelor/:studentId/missing-information
- * @description Yêu cầu bổ sung thông tin luận văn
+ * @description Yêu cầu bổ sung thông tin tốt nghiệp
  * @access Public
  */
 bachelorRouter.post(
@@ -38,6 +39,13 @@ bachelorRouter.post(
   missingInformationValidator,
   wrapAsync(missingInformationController)
 )
+
+/**
+ * @route POST /bachelor/:studentId/request-info
+ * @description Yêu cầu cấp lại ảnh tốt nghiệp
+ * @access Public
+ */
+bachelorRouter.post('/:studentId/request-information', requestInfoValidator, wrapAsync(requestController))
 
 /**
  * @route PUT /bachelor/:studentId/approve

@@ -30,10 +30,10 @@ class BachelorServices {
       })
     }
 
-    if (bachelor.requests?.some((request) => request.status === 'pending')) {
+    if (bachelor.requests?.some((request) => request.status === 'pending' && request.type === 'image')) {
       throw new ErrorWithStatus({
         statusCode: 409,
-        message: 'Sinh viên này đã có một yêu cầu đang chờ xử lý.',
+        message: 'Bạn đang có một yêu cầu Sai Ảnh đang chờ xử lý.',
         name: 'RequestAlreadyExistsError'
       })
     }
@@ -47,6 +47,7 @@ class BachelorServices {
             newImageUrl,
             note,
             status: 'pending',
+            type: 'image',
             createdAt: new Date()
           }
         },
@@ -96,7 +97,7 @@ class BachelorServices {
     if (missingInformation) {
       throw new ErrorWithStatus({
         statusCode: 409,
-        message: 'Bạn đang có một yêu cầu đang chờ xử lý.',
+        message: 'Bạn đang có một yêu cầu Sai Thông Tin đang chờ xử lý.',
         name: 'MissingInformationAlreadyExistsError'
       })
     }
@@ -110,6 +111,59 @@ class BachelorServices {
         status: 'pending',
         createdAt: new Date()
       })
+    )
+  }
+
+  async addInfoRequest({
+    studentId,
+    fullName,
+    email,
+    major,
+    faculty,
+    note
+  }: {
+    studentId: string
+    fullName: string
+    email: string
+    major: string
+    faculty: string
+    note: string
+  }) {
+    const bachelor = await bachelorServices.findBachelorById(studentId)
+    if (!bachelor) {
+      throw new ErrorWithStatus({
+        statusCode: 404,
+        message: 'Không tìm thấy sinh viên với Student ID',
+        name: 'BachelorNotFoundError'
+      })
+    }
+
+    if (bachelor.requests?.some((request) => request.status === 'pending' && request.type === 'information')) {
+      throw new ErrorWithStatus({
+        statusCode: 409,
+        message: 'Bạn đang có một yêu cầu đang chờ xử lý.',
+        name: 'RequestAlreadyExistsError'
+      })
+    }
+
+    // 2. Thực hiện cập nhật nguyên tử (atomic update)
+    await mongo.bachelors.updateOne(
+      { studentId },
+      {
+        $push: {
+          requests: {
+            fullName,
+            email,
+            major,
+            faculty,
+            note,
+            status: 'pending',
+            type: 'information',
+            createdAt: new Date()
+          }
+        },
+        $set: { isRequested: true }
+      }
     )
   }
 }

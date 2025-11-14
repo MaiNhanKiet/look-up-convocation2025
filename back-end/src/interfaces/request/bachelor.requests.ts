@@ -4,7 +4,7 @@ export interface GetBachelorRequestQuery extends ParsedQs {
   studentId: string
 }
 
-export interface requestBody {
+export interface RequestBody {
   newImageUrl: string
   note: string
 }
@@ -38,5 +38,13 @@ export interface MissingInformationBody {
   fullName: string
   email: string
   phoneNumber: string
+  note: string
+}
+
+export interface RequestInfoBody {
+  fullName: string
+  email: string
+  major: string
+  faculty: string
   note: string
 }

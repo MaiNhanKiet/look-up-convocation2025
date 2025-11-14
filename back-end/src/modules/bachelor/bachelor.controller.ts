@@ -1,7 +1,13 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 import { Request, Response, NextFunction } from 'express'
 import bachelorServices from './bachelor.service'
-import { ApproveRequestBody, GetBachelorRequestQuery, MissingInformationBody, requestBody } from '~/interfaces/request/bachelor.requests'
+import {
+  ApproveRequestBody,
+  GetBachelorRequestQuery,
+  MissingInformationBody,
+  RequestBody,
+  RequestInfoBody
+} from '~/interfaces/request/bachelor.requests'
 import { omit } from 'lodash'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ErrorWithStatus } from '~/models/Errors'
@@ -22,7 +28,7 @@ export const getBachelorController = async (
 }
 
 export const requestController = async (
-  req: Request<ParamsDictionary, any, requestBody, GetBachelorRequestQuery>,
+  req: Request<ParamsDictionary, any, RequestBody, GetBachelorRequestQuery>,
   res: Response,
   next: NextFunction
 ) => {
@@ -65,6 +71,22 @@ export const missingInformationController = async (
   res.sendResponse({
     statusCode: 200,
     message: 'Đã gửi thông tin thành công',
+    data: null
+  })
+}
+
+export const requestInfoController = async (
+  req: Request<ParamsDictionary, any, RequestInfoBody, GetBachelorRequestQuery>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { studentId } = req.params
+  const { fullName, email, major, faculty, note } = req.body
+
+  await bachelorServices.addInfoRequest({ studentId, fullName, email, major, faculty, note })
+  res.sendResponse({
+    statusCode: 200,
+    message: 'Đã gửi yêu cầu thành công',
     data: null
   })
 }

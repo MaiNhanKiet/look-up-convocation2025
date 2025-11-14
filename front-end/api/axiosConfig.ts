@@ -1,5 +1,5 @@
 import axios from 'axios'
-// 'https://api.srofptuhcm.com/'
+
 const axiosInstance = axios.create({
   baseURL: 'https://api.srofptuhcm.com/',
   timeout: 10000,

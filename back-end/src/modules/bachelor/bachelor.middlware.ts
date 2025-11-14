@@ -154,13 +154,80 @@ export const missingInformationValidator = validate(
       },
       custom: {
         options: (value) => {
-          const phoneRegex = /^(0[35789]\d{8}|(\+?84)[35789]\d{8})$/;
+          const phoneRegex = /^(0[35789]\d{8}|(\+?84)[35789]\d{8})$/
 
           if (!value || !phoneRegex.test(value)) {
-            throw new Error('Số điện thoại không hợp lệ');
+            throw new Error('Số điện thoại không hợp lệ')
           }
-          return true;
+          return true
         }
+      }
+    },
+    note: {
+      in: ['body'],
+      optional: true,
+      trim: true,
+      isString: {
+        errorMessage: 'Ghi chú phải là chuỗi ký tự'
+      },
+      isLength: {
+        options: { max: 500 },
+        errorMessage: 'Ghi chú quá dài'
+      }
+    }
+  })
+)
+
+export const requestInfoValidator = validate(
+  checkSchema({
+    studentId: {
+      in: ['params'],
+      notEmpty: {
+        errorMessage: 'Mã số tân cử nhân bị bỏ trống'
+      },
+      trim: true,
+      custom: {
+        options: async (value, { req }) => {
+          const regex = /^[HCSQD][ESA]\d{4,6}$/
+          if (!regex.test(value)) {
+            throw new Error('Mã số tân cử nhân không hợp lệ')
+          }
+        }
+      }
+    },
+    fullName: {
+      in: ['body'],
+      optional: true,
+      notEmpty: {
+        errorMessage: 'Tên tân cử nhân bị bỏ trống'
+      },
+      trim: true,
+      isString: {
+        errorMessage: 'Tên tân cử nhân phải là chuỗi'
+      }
+    },
+    email: {
+      in: ['body'],
+      optional: true,
+      trim: true,
+      isEmail: {
+        errorMessage: 'Email không hợp lệ'
+      }
+    },
+    major: {
+      in: ['body'],
+      optional: true,
+      trim: true,
+      isString: {
+        errorMessage: 'Chuyên ngành phải là chuỗi'
+      }
+    },
+    faculty: {
+      in: ['body'],
+      optional: true,
+      trim: true,
+      isString: {
+        errorMessage: 'Khối ngành phải là chuỗi'
       }
     },
     note: {

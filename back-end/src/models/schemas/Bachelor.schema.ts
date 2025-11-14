@@ -14,9 +14,14 @@ interface ImagesType {
 }
 
 interface RequestEdit {
-  newImageUrl: string
-  note: string
+  fullName?: string
+  email?: string
+  major?: string
+  faculty?: string
+  note?: string
+  newImageUrl?: string
   status: 'pending' | 'approved' | 'rejected'
+  type: 'image' | 'information'
   createdAt: Date
 }
 

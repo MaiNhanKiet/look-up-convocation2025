@@ -331,14 +331,14 @@ export default function Home() {
       <Dialog open={showMissingInfoDialog} onOpenChange={setShowMissingInfoDialog}>
         <DialogContent
           onClose={() => setShowMissingInfoDialog(false)}
-          className='max-w-2xl px-2 bg-orange-50/60 dark:bg-orange-950/20 dark:border-orange-900'
+          className='max-w-2xl px-2 bg-orange-100/60 dark:bg-orange-950/20 dark:border-orange-900'
         >
           <div className='p-4 space-y-4'>
             <DialogHeader className='p-0 pb-0'>
               <DialogTitle className='text-2xl text-center font-bold text-gray-800 dark:text-gray-100'>
                 Thông Tin Tân Cử Nhân
               </DialogTitle>
-              <div className='mt-2 text-sm italic text-gray-600 dark:text-gray-300'>
+              <div className='mt-2 text-sm italic text-gray-800 dark:text-gray-300'>
                 Sau khi nhận thông tin, <strong>Ban Tổ Chức</strong> sẽ tiến hành kiểm tra lại và liên hệ với bạn trong
                 thời gian sớm nhất.
               </div>
@@ -348,13 +348,13 @@ export default function Home() {
               <form onSubmit={missingInfoForm.handleSubmit(onSubmitMissingInfo)} className='space-y-4'>
                 <div className='grid gap-4 sm:grid-cols-2'>
                   <div className='flex flex-col gap-2'>
-                    <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Mã số sinh viên</label>
+                    <label className='text-sm font-medium text-800-600 dark:text-gray-300'>Mã số sinh viên</label>
                     <Input value={mssvValue || ''} disabled className='bg-gray-100 dark:bg-gray-800' />
                   </div>
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                  <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Họ và tên *</label>
+                  <label className='text-sm font-medium text-800-600 dark:text-gray-300'>Họ và tên *</label>
                   <FormField
                     control={missingInfoForm.control}
                     name='fullName'
@@ -386,7 +386,7 @@ export default function Home() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                  <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Email *</label>
+                  <label className='text-sm font-medium text-gray-800 dark:text-gray-300'>Email *</label>
                   <FormField
                     control={missingInfoForm.control}
                     name='email'
@@ -422,7 +422,7 @@ export default function Home() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                  <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Số điện thoại *</label>
+                  <label className='text-sm font-medium text-gray-800 dark:text-gray-300'>Số điện thoại *</label>
                   <FormField
                     control={missingInfoForm.control}
                     name='phoneNumber'
@@ -455,7 +455,7 @@ export default function Home() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                  <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Ghi chú</label>
+                  <label className='text-sm font-medium text-gray-800 dark:text-gray-300'>Ghi chú</label>
                   <FormField
                     control={missingInfoForm.control}
                     name='note'
