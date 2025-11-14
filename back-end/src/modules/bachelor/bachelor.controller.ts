@@ -20,26 +20,36 @@ export const getBachelorController = async (
   const { studentId } = req.params
 
   const data = await bachelorServices.findBachelorById(studentId)
-  
-  // Lấy email gốc từ dữ liệu
+
+  // Lấy email gốc
   const originalEmail: string = data?.email || ''; 
   let maskedEmail: string;
 
-  // --- LOGIC CHE GIẤU EMAIL ---
+  // --- LOGIC CHE GIẤU EMAIL: Giữ lại 2 ký tự đầu ---
   const atIndex = originalEmail.indexOf('@');
+  const localPartLength = atIndex; // Độ dài của phần tên người dùng (trước @)
 
   if (atIndex > 0) {
-    // Nếu tìm thấy '@', che giấu phần tên người dùng và giữ lại domain
-    // Ví dụ: nguyenvana@fpt.edu.vn sẽ thành ***@fpt.edu.vn
-    const domainPart = originalEmail.substring(atIndex); 
-    maskedEmail = `***${domainPart}`; 
+    const domainPart = originalEmail.substring(atIndex); // Bao gồm ký tự @ và domain
+
+    if (localPartLength > 2) {
+        // 1. Giữ lại 2 ký tự đầu tiên
+        const firstTwoChars = originalEmail.substring(0, 2); 
+        
+        // 2. Ghép 2 ký tự đầu + *** + domain
+        maskedEmail = `${firstTwoChars}***${domainPart}`; // Ví dụ: nguyenvana@... -> ng***@...
+    } else {
+        // Nếu phần tên người dùng chỉ có 1 hoặc 2 ký tự (hoặc không có phần tên)
+        // thì không cần che giấu mà giữ nguyên để đảm bảo email vẫn có nghĩa
+        maskedEmail = originalEmail; 
+    }
   } else {
-    // Nếu không có email hoặc email không hợp lệ
+    // Trường hợp email không có ký tự '@'
     maskedEmail = 'KHÔNG CÓ EMAIL';
   }
-  // -----------------------------
+  // ----------------------------------------------------
 
-  // 1. Loại bỏ trường 'requests' khỏi dữ liệu gốc
+  // 1. Loại bỏ trường 'requests'
   const responseData: any = omit(data, ['requests'])
 
   // 2. Ghi đè giá trị của trường email bằng email đã che giấu
