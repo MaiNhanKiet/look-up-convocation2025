@@ -1,8 +1,7 @@
 import axios from 'axios'
-
-// Tạo instance axios với cấu hình mặc định
+// 'https://api.srofptuhcm.com/'
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || undefined,
+  baseURL: 'http://localhost:8080',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

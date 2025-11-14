@@ -1,8 +1,10 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 import { Request, Response, NextFunction } from 'express'
 import bachelorServices from './bachelor.service'
-import { ApproveRequestBody, GetBachelorRequestQuery, requestBody } from '~/interfaces/request/bachelor.requests'
+import { ApproveRequestBody, GetBachelorRequestQuery, MissingInformationBody, requestBody } from '~/interfaces/request/bachelor.requests'
 import { omit } from 'lodash'
+import HTTP_STATUS from '~/constants/httpStatus'
+import { ErrorWithStatus } from '~/models/Errors'
 
 export const getBachelorController = async (
   req: Request<ParamsDictionary, any, any, GetBachelorRequestQuery>,
@@ -47,6 +49,22 @@ export const approveController = async (
   res.sendResponse({
     statusCode: 200,
     message: 'Cập nhật trạng thái yêu cầu thành công',
+    data: null
+  })
+}
+
+export const missingInformationController = async (
+  req: Request<ParamsDictionary, any, MissingInformationBody, GetBachelorRequestQuery>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { studentId } = req.params
+  const { fullName, email, phoneNumber, note } = req.body
+
+  await bachelorServices.addMissingInformation({ studentId, fullName, email, phoneNumber, note })
+  res.sendResponse({
+    statusCode: 200,
+    message: 'Đã gửi thông tin thành công',
     data: null
   })
 }

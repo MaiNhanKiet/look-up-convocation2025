@@ -19,7 +19,8 @@ app.use(helmet())
 app.use(hpp())
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'localhost:3002'
+    // origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'localhost:3002'
+    origin: '*'
   })
 )
 
@@ -29,7 +30,7 @@ app.use(paginate.middleware(10, 30))
 
 /* ===== ROUTES ===== */
 app.use(syncResponseMiddleware)
-app.use('/api/', router)
+app.use('/api', router)
 app.get('/api/health', async (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -53,7 +54,7 @@ const startServer = async () => {
   try {
     /* ===== CHECK DATABASE AND REDIS CONNECTIONS ===== */
     // await Promise.all([checkDbConnection(), checkRedisConnection()])
-    checkDbConnection()
+    await checkDbConnection()
 
     app.listen(PORT, () => {
       // logEvent({

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -287,11 +287,11 @@ export default function StudentInfoPage() {
                 <div className='grid gap-4 sm:grid-cols-2'>
                   <div className='flex flex-col gap-2'>
                     <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Mã số sinh viên</label>
-                    <Input value={studentData.studentId} disabled className='bg-gray-100 dark:bg-gray-800' />
+                    <Input value={studentData.studentId} disabled className='text-sm bg-gray-100 dark:bg-gray-800' />
                   </div>
                   <div className='flex flex-col gap-2'>
                     <label className='text-sm font-medium text-gray-600 dark:text-gray-300'>Họ và tên</label>
-                    <Input value={studentData.fullName} disabled className='bg-gray-100 dark:bg-gray-800' />
+                    <Input value={studentData.fullName} disabled className='text-sm bg-gray-100 dark:bg-gray-800' />
                   </div>
                 </div>
 
@@ -304,10 +304,22 @@ export default function StudentInfoPage() {
                     name='requestedImageUrl'
                     control={control}
                     rules={{ required: 'Vui lòng nhập Link ảnh' }}
-                    render={({ field }) => <Input {...field} placeholder='...' className='text-lg' />}
+                    render={({ field }) => <Input {...field} placeholder='...' className='text-sm' />}
                   />
                   {errors.requestedImageUrl && (
-                    <p className='text-sm text-red-500'>{errors.requestedImageUrl?.message}</p>
+                    <AnimatePresence>
+                      {errors.requestedImageUrl && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          transition={{ duration: 0.2 }}
+                          className='text-sm text-red-500'
+                        >
+                          {errors.requestedImageUrl?.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   )}
                 </div>
 
@@ -321,12 +333,24 @@ export default function StudentInfoPage() {
                     render={({ field }) => (
                       <textarea
                         {...field}
-                        placeholder='Mô tả chi tiết vấn đề hoặc yêu cầu bổ sung...'
+                        placeholder='Mô tả chi tiết vấn đề ...'
                         className='min-h-[110px] resize-none rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm transition focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-orange-500 dark:focus:ring-orange-900/50'
                       />
                     )}
                   />
-                  {errors.requestedNote && <p className='text-sm text-red-500'>{errors.requestedNote?.message}</p>}
+                  <AnimatePresence>
+                    {errors.requestedNote && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                        className='text-sm text-red-500'
+                      >
+                        {errors.requestedNote?.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <Button

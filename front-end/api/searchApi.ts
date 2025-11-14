@@ -1,4 +1,3 @@
-import { success } from 'zod'
 import axiosInstance from './axiosConfig'
 
 // Interface cho thông tin sinh viên
@@ -55,6 +54,20 @@ export interface SearchResponse {
   message?: string
 }
 
+export interface MissingInformationRequest {
+  email: string
+  fullName: string
+  phoneNumber: string
+  note?: string
+}
+
+export interface MissingInformationResponse {
+  success: boolean
+  statusCode: number
+  message: string
+  data?: any
+}
+
 export const searchApi = {
   getStudentById: async (id: string): Promise<StudentResponse> => {
     const response = await axiosInstance.get<StudentResponse>(`/api/bachelor/${id}`)
@@ -65,6 +78,16 @@ export const searchApi = {
       newImageUrl: data.imageUrl,
       note: data.note
     })
+    return response.data
+  },
+  submitMissingInformation: async (
+    studentId: string,
+    data: MissingInformationRequest
+  ): Promise<MissingInformationResponse> => {
+    const response = await axiosInstance.post<MissingInformationResponse>(
+      `/api/bachelor/${studentId}/missing-information`,
+      data
+    )
     return response.data
   }
 }
