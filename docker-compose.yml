@@ -1,7 +1,30 @@
-version: "3.9"
+version: '3.9'
 
 services:
-  # 🍃 MongoDB Database
+  # 👑 1. NGINX PROXY MANAGER (Cổng vào duy nhất)
+  # Đây là dịch vụ DUY NHẤT được truy cập từ Internet.
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: convocation2025_npm
+    restart: unless-stopped
+    environment:
+      TZ: 'Australia/Brisbane' # Bạn có thể đổi múi giờ nếu muốn
+    ports:
+      - '80:80' # Cho HTTP (bắt buộc)
+      - '81:81' # Cho giao diện Admin (nên đóng bằng tường lửa)
+      - '443:443' # Cho HTTPS (bắt buộc)
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    # Thêm NPM vào mạng 'convocation2025' để nó "thấy" được backend/frontend
+    networks:
+      - convocation2025
+    depends_on:
+      - backend
+      - frontend
+
+  # 🍃 2. MONGODB DATABASE
+  # KHÔNG BAO GIỜ được lộ 'ports' của database ra ngoài.
   mongo:
     image: mongo:latest
     container_name: convocation2025_mongo
@@ -9,14 +32,13 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: kietmn
       MONGO_INITDB_ROOT_PASSWORD: kietdeptrai123
-    ports:
-      - "27017:27017"
+    # KHÔNG CẦN 'ports'. Backend sẽ kết nối qua tên container.
     volumes:
-      - mongo_data:/data/db # MongoDB lưu dữ liệu trong /data/db
+      - mongo_data:/data/db
     networks:
       - convocation2025
 
-  # 🛠 Backend service (Node + TypeScript)
+  # 🛠 3. BACKEND SERVICE (Node + TypeScript)
   backend:
     build:
       context: ./back-end
@@ -25,41 +47,44 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - PORT=8080
+      - PORT=8080 # Đây là cổng chạy BÊN TRONG container
+      # Kết nối database bằng TÊN CONTAINER (convocation2025_mongo)
       - DATABASE_URL=mongodb://kietmn:kietdeptrai123@convocation2025_mongo:27017/convocation2025?authSource=admin
       - DB_NAME=convocation2025
       - DB_BACHELOR_COLLECTION=bachelors
-      - CORS_ORIGIN=srofptuhcm.com
-    ports:
-      - "8080:8080"
+      # Cập nhật CORS sau khi có domain
+      - CORS_ORIGIN=https://www.srofptuhcm.com,https://srofptuhcm.com
+    # KHÔNG CẦN 'ports'. NPM sẽ truy cập nội bộ qua port 8080.
     depends_on:
       - mongo
     networks:
       - convocation2025
 
-  # 🌐 Frontend service (Next.js)
+  # 🌐 4. FRONTEND SERVICE (Next.js)
   frontend:
     build:
       context: ./front-end
       dockerfile: Dockerfile
+      args:
+        # Truyền biến này VÀO LÚC BUILD
+        - NEXT_PUBLIC_API_URL=https://api.srofptuhcm.com
     container_name: convocation2025_frontend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      # PORT này cho Next.js server (đã EXPOSE 3002 trong Dockerfile)
       - PORT=3002
-      - NEXT_PUBLIC_API_URL=http://143.198.84.82:8080/
-    ports:
-      - "3002:3002"
+    # KHÔNG CẦN 'ports'. NPM sẽ truy cập nội bộ qua port 3002.
     depends_on:
       - backend
     networks:
       - convocation2025
 
-# 📦 Lưu trữ dữ liệu
+# 📦 Nơi lưu trữ data của database (persistent data)
 volumes:
   mongo_data:
 
-# 🌐 Network chung
+# 🌐 Mạng nội bộ để các container "nói chuyện" với nhau
 networks:
   convocation2025:
     driver: bridge
