@@ -11,6 +11,7 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import { logEvent } from './utils/logger'
 import { ActionLog, AuditStatusLog, ResourceLog } from './constants/enum'
 import { checkDbConnection } from './utils/connecttion'
+import googleLoginRouter from './routers/google-login.router'
 
 const app = express()
 
