@@ -1,0 +1,113 @@
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Lấy danh sách yêu cầu thành công",
+  "data": [
+    {
+      "_id": "6916fe480a1c3a2275377d38",
+      "studentId": "SE172338",
+      "fullName": "Nguyễn Phương Nam",
+      "newImage": "https://drive.google.com/file/d/15lwxew0oC6bCkPiyT2HQdukMB2LguvQo/view?usp=sharing",
+      "note": "Em xin phép được cập nhật ảnh chiếu slide",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-17T06:02:19.191Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275377a1f",
+      "studentId": "SA160117",
+      "fullName": "Trần Như Yến",
+      "newImage": "https://drive.google.com/drive/folders/1-IIoxXE22DAHyY4NsF6Ee2fDGIPfzLJY",
+      "note": "Hình trước có một số lỗi, nên em muốn gửi lại hình lúc trao bằng cho chỉnh chu nhất ạ",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T17:05:00.899Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275378264",
+      "studentId": "SE161210",
+      "fullName": "Trần Thanh Phong",
+      "newImage": null,
+      "note": "chuyên ngành là truyền thông đa phương tiện",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T14:45:10.864Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275378137",
+      "studentId": "SA170124",
+      "fullName": "Ngô Bảo Hùng",
+      "newImage": "https://drive.google.com/file/d/1btxv47PMuu-E_2JzgTZFHWxV72YHFWVs/view?usp=drivesdk",
+      "note": "Bổ sung ảnh chân dung kỷ yếu",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T12:41:31.128Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275378118",
+      "studentId": "SS170931",
+      "fullName": "Nguyễn Trần Đan Thanh",
+      "newImage": "https://drive.google.com/file/d/1KtNy2FXAVOJ5EVMPfLCrJBSAm_xFlJ2I/view?usp=drivesdk",
+      "note": "Màu ảnh chụp chưa ưng ý.",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T10:43:12.847Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275377df0",
+      "studentId": "SE170101",
+      "fullName": "Lê Thành Thái",
+      "newImage": null,
+      "note": "Bằng chuyên ngành của mình phải là DIGITAL ART & DESIGN chứ nhỉ",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T10:03:22.596Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275377df7",
+      "studentId": "SE171047",
+      "fullName": "Phạm Thị Vân Anh",
+      "newImage": null,
+      "note": "Bằng chuyên ngành của mình phải là DIGITAL ART & DESIGN chứ nhỉ",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T10:02:45.331Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275377bf1",
+      "studentId": "SE170093",
+      "fullName": "Đào Viết Hoàng",
+      "newImage": null,
+      "note": "Chuyên ngành của em là Graphic Design. Anh/chị có thể đổi lại được không ạ? Em xin cảm ơn.",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T09:49:04.347Z"
+    },
+    {
+      "_id": "6916fe480a1c3a2275377c1d",
+      "studentId": "SE173137",
+      "fullName": "Trịnh Vũ Kim Hoàng",
+      "newImage": null,
+      "note": "Em học ngành Digital Art & Design ạ",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T09:28:06.688Z"
+    },
+    {
+      "_id": "6916fe480a1c3a22753782cf",
+      "studentId": "SS170628",
+      "fullName": "Nguyễn Quỳnh Anh",
+      "newImage": null,
+      "note": "Dạ do em thấy mail bị sai nên em mong nhà trường chỉnh sửa lại mail cá nhân em ạ. Em cảm ơn ạ.",
+      "status": "pending",
+      "type": "image",
+      "createdAt": "2025-11-16T09:18:32.209Z"
+    }
+  ],
+  "metadata": {
+    "totalItems": 95,
+    "currentPage": 1,
+    "totalPages": 10,
+    "limit": 10
+  }
+}
