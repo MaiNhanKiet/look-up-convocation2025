@@ -13,6 +13,8 @@ services:
       - DATABASE_URL=mongodb://kietmn:kietdeptrai123@143.198.84.82:17023/convocation2025?authSource=admin
       - DB_NAME=convocation2025
       - DB_BACHELOR_COLLECTION=bachelors
+    ports:
+      - '8080:8080'
     networks:
       - convocation2025
       - global_proxy_net
@@ -28,6 +30,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3002
+    ports:
+      - '3002:3002'
     networks:
       - convocation2025
       - global_proxy_net
