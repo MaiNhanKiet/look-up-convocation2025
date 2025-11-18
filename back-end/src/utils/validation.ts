@@ -36,3 +36,19 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     next(entityError)
   }
 }
+
+export const filter = (validValues: string[], errorMessage: string) => {
+  return {
+    custom: {
+      options: (value: string | string[]) => {
+        const values = Array.isArray(value) ? value : [value]
+
+        const isValid = values.every((val: string) => validValues.includes(val))
+        if (!isValid) {
+          throw new Error(errorMessage)
+        }
+        return true
+      }
+    }
+  }
+}

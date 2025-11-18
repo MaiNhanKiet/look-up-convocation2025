@@ -158,6 +158,95 @@ class BachelorServices {
       }
     )
   }
+
+  async getRequests(options: any, baseFilter: any = {}) {
+    const { page, limit, search, sort, order } = options
+
+    // 1. Chuẩn bị giá trị Phân trang (Vì luôn có, không cần fallback)
+    const pageNum = parseInt(page)
+    const limitNum = parseInt(limit)
+    const skipNum = (pageNum - 1) * limitNum
+
+    // 2. Xây dựng $match stage
+    const matchStage: any = { ...baseFilter }
+
+    // Chỉ search theo studentId và fullName
+    if (search) {
+      matchStage.$or = [
+        { studentId: { $regex: search, $options: 'i' } },
+        { fullName: { $regex: search, $options: 'i' } }
+      ]
+    }
+
+    // 3. Xây dựng $sort stage
+    const sortStage: any = {}
+    if (sort && order) {
+      const sortOrder = order === 'desc' ? -1 : 1
+      const rootFields = ['studentId', 'fullName']
+      const sortField = rootFields.includes(sort) ? sort : `requests.${sort}`
+
+      sortStage[sortField] = sortOrder
+    } else {
+      // Sắp xếp mặc định
+      sortStage['requests.createdAt'] = -1
+    }
+
+    // 4. Xây dựng pipeline lấy Dữ liệu
+    const dataPipeline: any[] = [
+      { $unwind: '$requests' },
+      { $match: matchStage },
+      { $sort: sortStage },
+      { $skip: skipNum },
+      { $limit: limitNum },
+      {
+        $project: {
+          studentId: 1,
+          fullName: 1,
+          requests: 1
+        }
+      }
+    ]
+
+    // 5. Xây dựng pipeline Đếm
+    const countPipeline: any[] = [{ $unwind: '$requests' }, { $match: matchStage }, { $count: 'total' }]
+
+    // 6. Thực thi song song
+    const [requests, totalResult] = await Promise.all([
+      mongo.bachelors.aggregate(dataPipeline).toArray(),
+      mongo.bachelors.aggregate(countPipeline).toArray()
+    ])
+
+    const total = totalResult[0]?.total || 0
+
+    // 7. Trả về kết quả
+    // 7. Map kết quả thành shape phẳng và trả về kèm metadata
+    const mapped = requests.map((doc: any) => {
+      // doc structure: { _id: <bachelorId>, studentId, fullName, requests: { ... } }
+      const req = doc.requests || {}
+      return {
+        _id: doc._id,
+        studentId: doc.studentId,
+        fullName: doc.fullName,
+        newImage: req.newImageUrl ?? req.newImage ?? null,
+        note: req.note ?? null,
+        status: req.status ?? null,
+        type: req.type ?? null,
+        createdAt: req.createdAt ?? null
+      }
+    })
+
+    const totalPages = limitNum > 0 ? Math.ceil(total / limitNum) : 0
+
+    return {
+      data: mapped,
+      metadata: {
+        totalItems: total,
+        currentPage: pageNum,
+        totalPages,
+        limit: limitNum
+      }
+    }
+  }
 }
 
 const bachelorServices = new BachelorServices()

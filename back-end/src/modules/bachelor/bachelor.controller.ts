@@ -125,3 +125,19 @@ export const requestInfoController = async (
     data: null
   })
 }
+
+export const getRequestsController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const result = await bachelorServices.getRequests(req.query)
+
+  // result: { data: Array, metadata: { totalItems, currentPage, totalPages, limit } }
+  res.sendResponse({
+    statusCode: 200,
+    message: 'Lấy danh sách yêu cầu thành công',
+    data: result.data,
+    metadata: result.metadata
+  })
+}

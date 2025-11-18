@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ErrorWithStatus } from '~/models/Errors'
-import { validate } from '~/utils/validation'
+import { filter, validate } from '~/utils/validation'
 
 export const bachelorValidator = validate(
   checkSchema(
@@ -227,4 +227,142 @@ export const requestInfoValidator = validate(
       }
     }
   })
+)
+
+export const getBachelorValidator = validate(
+  checkSchema(
+    {
+      page: {
+        notEmpty: {
+          errorMessage: 'Trang là bắt buộc'
+        },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: 'Trang phải là số nguyên dương'
+        }
+      },
+      limit: {
+        notEmpty: {
+          errorMessage: 'Giới hạn là bắt buộc'
+        },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: 'Giới hạn phải là số nguyên dương và nhỏ hơn 100'
+        }
+      },
+      sort: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            const validOrders = ['']
+            if (!validOrders.includes(value)) {
+              //
+            }
+            return true
+          }
+        }
+      },
+      order: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            const validOrders = ['asc', 'desc']
+            if (!validOrders.includes(value)) {
+              throw new Error('Thứ tự sắp xếp không hợp lệ')
+            }
+            return true
+          }
+        }
+      },
+      search: {
+        optional: true,
+        trim: true,
+        isString: {
+          errorMessage: 'Từ khóa tìm kiếm phải là chuỗi ký tự'
+        },
+        isLength: {
+          options: { max: 100 },
+          errorMessage: 'Từ khóa tìm kiếm quá dài'
+        }
+      },
+      major: {
+        optional: true,
+        ...filter(['CNTT', 'HTTT', 'KHMT', 'MTA', 'ANHT'], 'Chuyên ngành không hợp lệ')
+      },
+      faculty: {
+        optional: true,
+        ...filter(['CNPM', 'ATTT', 'KSTN', 'VT', 'DL'], 'Khối ngành không hợp lệ')
+      },
+      hall: {
+        optional: true,
+        ...filter(['A', 'B'], 'Hội trường không hợp lệ')
+      },
+      session: {
+        optional: true,
+        ...filter(['1', '2'], 'Phiên không hợp lệ')
+      }
+    },
+    ['query']
+  )
+)
+
+export const requestsValidator = validate(
+  checkSchema(
+    {
+      page: {
+        notEmpty: {
+          errorMessage: 'Trang là bắt buộc'
+        },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: 'Trang phải là số nguyên dương'
+        }
+      },
+      limit: {
+        notEmpty: {
+          errorMessage: 'Giới hạn là bắt buộc'
+        },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: 'Giới hạn phải là số nguyên dương và nhỏ hơn 100'
+        }
+      },
+      sort: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            const validOrders = ['']
+            if (!validOrders.includes(value)) {
+              //
+            }
+            return true
+          }
+        }
+      },
+      order: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            const validOrders = ['asc', 'desc']
+            if (!validOrders.includes(value)) {
+              throw new Error('Thứ tự sắp xếp không hợp lệ')
+            }
+            return true
+          }
+        }
+      },
+      search: {
+        optional: true,
+        trim: true,
+        isString: {
+          errorMessage: 'Từ khóa tìm kiếm phải là chuỗi ký tự'
+        },
+        isLength: {
+          options: { max: 100 },
+          errorMessage: 'Từ khóa tìm kiếm quá dài'
+        }
+      }
+    },
+    ['query']
+  )
 )

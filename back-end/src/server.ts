@@ -19,8 +19,7 @@ app.use(helmet())
 app.use(hpp())
 app.use(
   cors({
-    // origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'localhost:3002'
-    origin: 'https://tracuuthongtin.srofptuhcm.com'
+    origin: process.env.CORS_ORIGIN
   })
 )
 

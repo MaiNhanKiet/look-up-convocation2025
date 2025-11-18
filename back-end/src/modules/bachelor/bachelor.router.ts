@@ -2,14 +2,17 @@ import express from 'express'
 import {
   approveValidator,
   bachelorValidator,
+  getBachelorValidator,
   missingInformationValidator,
   requestInfoValidator,
+  requestsValidator,
   requestValidator
 } from './bachelor.middlware'
 import { wrapAsync } from '~/utils/handler'
 import {
   approveController,
   getBachelorController,
+  getRequestsController,
   missingInformationController,
   requestController
 } from './bachelor.controller'
@@ -53,5 +56,19 @@ bachelorRouter.post('/:studentId/request-information', requestInfoValidator, wra
  * @access Admin
  */
 // bachelorRouter.put('/approve/:studentId', approveValidator, wrapAsync(approveController))
+
+/**
+ * @route GET /bachelors
+ * @description Lấy danh sách tân cửa nhân
+ * @access Admin
+ */
+bachelorRouter.get('/bachelors', getBachelorValidator, wrapAsync(getBachelorController))
+
+/**
+ * @route POST /bachelor/requests
+ * @description Lấy danh sách yêu cầu liên quan đến tốt nghiệp
+ * @access Admin
+ */
+bachelorRouter.post('/requests', requestsValidator, wrapAsync(getRequestsController))
 
 export default bachelorRouter
