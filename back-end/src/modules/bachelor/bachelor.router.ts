@@ -55,7 +55,7 @@ bachelorRouter.post('/:studentId/request-information', requestInfoValidator, wra
  * @description Duyệt thông tin thiếu của tân cửa nhân
  * @access Admin
  */
-// bachelorRouter.put('/approve/:studentId', approveValidator, wrapAsync(approveController))
+bachelorRouter.put('/approve/:studentId', approveValidator, wrapAsync(approveController))
 
 /**
  * @route GET /bachelors

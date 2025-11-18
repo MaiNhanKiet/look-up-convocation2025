@@ -2,11 +2,20 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
+import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { motion } from 'framer-motion'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { userApi } from '@/api'
+
+type GoogleUserInfo = {
+  email?: string
+  name?: string
+  picture?: string
+  exp?: number
+}
 
 export default function LoginPage() {
   const router = useRouter()
@@ -16,35 +25,61 @@ export default function LoginPage() {
   useEffect(() => {
     const storedUser = sessionStorage.getItem('user')
     if (storedUser) {
-      // router.push('/')
+      router.replace('/dashboard')
     }
   }, [router])
 
-  const handleLoginSuccess = (response: any) => {
-    const credential = response.credential
-    console.log('Google credential:', credential)
-
+  const handleLoginSuccess = async (response: CredentialResponse) => {
     setIsLoading(true)
+    setErrorMessage('')
 
     try {
-      const decoded: any = jwtDecode(credential)
-      console.log('Decoded token:', decoded)
+      const credential = response.credential
+      if (!credential) {
+        throw new Error('Không nhận được mã xác thực từ Google')
+      }
 
-      sessionStorage.setItem('user', JSON.stringify(decoded))
+      const decoded = jwtDecode<GoogleUserInfo>(credential)
+      if (!decoded?.email) {
+        throw new Error('Không thể đọc thông tin tài khoản Google')
+      }
 
-      setTimeout(() => {
-        setIsLoading(false)
-        // router.push('/')
-      }, 500)
-    } catch (error) {
-      console.error(error)
-      setErrorMessage('Đăng nhập thất bại. Vui lòng thử lại!')
+      const apiResponse = await userApi.googleLogin(credential)
+
+      const storedData = {
+        profile: {
+          email: decoded.email,
+          name: decoded.name,
+          picture: decoded.picture
+        },
+        credential,
+        token: apiResponse.data?.token
+      }
+
+      sessionStorage.setItem('user', JSON.stringify(storedData))
+      router.push('/dashboard')
+    } catch (error: any) {
+      console.error('Google login error:', error)
+      const isUserNotFound = error?.response?.status === 404
+      const backendMessage = error?.response?.data?.message
+      const message =
+        (isUserNotFound && 'Tài khoản Google này chưa được cấp quyền truy cập hệ thống') ||
+        backendMessage ||
+        error?.message ||
+        'Đăng nhập thất bại. Vui lòng thử lại!'
+      sessionStorage.removeItem('user')
+      setErrorMessage(message)
+      toast.error(message)
+      router.replace('/login')
+    } finally {
       setIsLoading(false)
     }
   }
 
   const handleLoginError = () => {
     setErrorMessage('Đăng nhập thất bại. Vui lòng thử lại!')
+    sessionStorage.removeItem('user')
+    router.replace('/login')
   }
 
   return (

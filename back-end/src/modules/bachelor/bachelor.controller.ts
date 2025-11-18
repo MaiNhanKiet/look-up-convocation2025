@@ -22,7 +22,7 @@ export const getBachelorController = async (
   const data = await bachelorServices.findBachelorById(studentId)
 
   // Lấy email gốc
-  const originalEmail: string = data?.email || ''; 
+  const originalEmail: string = data?.email || '';
   let maskedEmail: string;
 
   // --- LOGIC CHE GIẤU EMAIL: Giữ lại 2 ký tự đầu ---
@@ -33,15 +33,15 @@ export const getBachelorController = async (
     const domainPart = originalEmail.substring(atIndex); // Bao gồm ký tự @ và domain
 
     if (localPartLength > 2) {
-        // 1. Giữ lại 2 ký tự đầu tiên
-        const firstTwoChars = originalEmail.substring(0, 2); 
-        
-        // 2. Ghép 2 ký tự đầu + *** + domain
-        maskedEmail = `${firstTwoChars}***${domainPart}`; // Ví dụ: nguyenvana@... -> ng***@...
+      // 1. Giữ lại 2 ký tự đầu tiên
+      const firstTwoChars = originalEmail.substring(0, 2);
+
+      // 2. Ghép 2 ký tự đầu + *** + domain
+      maskedEmail = `${firstTwoChars}***${domainPart}`; // Ví dụ: nguyenvana@... -> ng***@...
     } else {
-        // Nếu phần tên người dùng chỉ có 1 hoặc 2 ký tự (hoặc không có phần tên)
-        // thì không cần che giấu mà giữ nguyên để đảm bảo email vẫn có nghĩa
-        maskedEmail = originalEmail; 
+      // Nếu phần tên người dùng chỉ có 1 hoặc 2 ký tự (hoặc không có phần tên)
+      // thì không cần che giấu mà giữ nguyên để đảm bảo email vẫn có nghĩa
+      maskedEmail = originalEmail;
     }
   } else {
     // Trường hợp email không có ký tự '@'

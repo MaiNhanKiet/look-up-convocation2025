@@ -13,17 +13,18 @@ import { ActionLog, AuditStatusLog, ResourceLog } from './constants/enum'
 import { checkDbConnection } from './utils/connecttion'
 
 const app = express()
-
+app.set('trust proxy', 1);
 /* ===== MIDDLEWARES ===== */
 app.use(helmet())
 app.use(hpp())
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN
+    // origin: process.env.CORS_ORIGIN
+    origin: '*'
   })
 )
 
-// app.use(limiter)
+app.use(limiter)
 app.use(express.json())
 app.use(paginate.middleware(10, 30))
 
