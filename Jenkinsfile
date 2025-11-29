@@ -3,6 +3,7 @@ pipeline {
     
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
+        DOCKER_COMPOSE_CMD = 'docker compose' // Thay bằng 'docker-compose' nếu dùng V1
     }
     
     stages {
@@ -13,12 +14,19 @@ pipeline {
             }
         }
         
+        stage('Check Docker Compose Version') {
+            steps {
+                echo 'Checking Docker Compose version'
+                sh 'docker compose version || docker-compose version'
+            }
+        }
+        
         stage('Test Build Frontend') {
             steps {
                 echo 'Testing Docker build for frontend service'
                 script {
                     def buildResult = sh(
-                        script: "docker compose -f ${COMPOSE_FILE} build frontend",
+                        script: "docker compose -f \${COMPOSE_FILE} build frontend || docker-compose -f \${COMPOSE_FILE} build frontend",
                         returnStatus: true
                     )
                     if (buildResult != 0) {
@@ -33,15 +41,15 @@ pipeline {
         stage('Stop Old Frontend Container') {
             steps {
                 echo 'Stopping and removing old frontend container'
-                sh 'docker compose -f ${COMPOSE_FILE} stop frontend || true'
-                sh 'docker compose -f ${COMPOSE_FILE} rm -f frontend || true'
+                sh 'docker compose -f \${COMPOSE_FILE} stop frontend || docker-compose -f \${COMPOSE_FILE} stop frontend || true'
+                sh 'docker compose -f \${COMPOSE_FILE} rm -f frontend || docker-compose -f \${COMPOSE_FILE} rm -f frontend || true'
             }
         }
         
         stage('Deploy Frontend') {
             steps {
                 echo 'Building and deploying frontend service'
-                sh "docker compose -f ${COMPOSE_FILE} up -d --no-deps --build frontend"
+                sh "docker compose -f \${COMPOSE_FILE} up -d --no-deps --build frontend || docker-compose -f \${COMPOSE_FILE} up -d --no-deps --build frontend"
                 echo 'Waiting for frontend to be ready...'
                 sleep(time: 5, unit: 'SECONDS')
             }
