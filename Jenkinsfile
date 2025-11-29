@@ -2,8 +2,9 @@ pipeline {
     agent any
     
     environment {
-        COMPOSE_FILE = 'docker-compose.yml'
-        DOCKER_COMPOSE_CMD = 'docker compose' // Thay bằng 'docker-compose' nếu dùng V1
+        FRONTEND_IMAGE = 'convocation2025_frontend'
+        FRONTEND_CONTAINER = 'convocation2025_frontend'
+        NETWORK_NAME = 'look-up-graduration_convocation2025'
     }
     
     stages {
@@ -14,26 +15,16 @@ pipeline {
             }
         }
         
-        stage('Check Docker Compose Version') {
+        stage('Build Frontend Image') {
             steps {
-                echo 'Checking Docker Compose version'
-                sh 'docker compose version || docker-compose version'
-            }
-        }
-        
-        stage('Test Build Frontend') {
-            steps {
-                echo 'Testing Docker build for frontend service'
-                script {
-                    def buildResult = sh(
-                        script: "docker compose -f \${COMPOSE_FILE} build frontend || docker-compose -f \${COMPOSE_FILE} build frontend",
-                        returnStatus: true
-                    )
-                    if (buildResult != 0) {
-                        error("Frontend Docker build failed! Stopping pipeline.")
-                    } else {
-                        echo "Frontend Docker build successful."
-                    }
+                echo 'Building frontend Docker image'
+                dir('front-end') {
+                    sh '''
+                        docker build \
+                            --build-arg NEXT_PUBLIC_API_URL=https://api.srofptuhcm.com \
+                            -t ${FRONTEND_IMAGE}:latest \
+                            -f Dockerfile .
+                    '''
                 }
             }
         }
@@ -41,15 +32,23 @@ pipeline {
         stage('Stop Old Frontend Container') {
             steps {
                 echo 'Stopping and removing old frontend container'
-                sh 'docker compose -f \${COMPOSE_FILE} stop frontend || docker-compose -f \${COMPOSE_FILE} stop frontend || true'
-                sh 'docker compose -f \${COMPOSE_FILE} rm -f frontend || docker-compose -f \${COMPOSE_FILE} rm -f frontend || true'
+                sh 'docker stop ${FRONTEND_CONTAINER} || true'
+                sh 'docker rm ${FRONTEND_CONTAINER} || true'
             }
         }
         
         stage('Deploy Frontend') {
             steps {
-                echo 'Building and deploying frontend service'
-                sh "docker compose -f \${COMPOSE_FILE} up -d --no-deps --build frontend || docker-compose -f \${COMPOSE_FILE} up -d --no-deps --build frontend"
+                echo 'Deploying frontend container'
+                sh '''
+                    docker run -d \
+                        --name ${FRONTEND_CONTAINER} \
+                        --network ${NETWORK_NAME} \
+                        --restart unless-stopped \
+                        -e NODE_ENV=production \
+                        -e PORT=3002 \
+                        ${FRONTEND_IMAGE}:latest
+                '''
                 echo 'Waiting for frontend to be ready...'
                 sleep(time: 5, unit: 'SECONDS')
             }
