@@ -5,7 +5,7 @@ pipeline {
             steps {
                 echo 'Testing Docker build for frontend service without running containers'
                 script {
-                    def buildResult = sh(script: "docker-compose -f docker-compose.yml build frontend", returnStatus: true)
+                    def buildResult = sh(script: "docker compose -f docker-compose.yml build frontend", returnStatus: true)
                     if (buildResult != 0) {
                         error("Docker build failed! Stopping pipeline.")
                     } else {
@@ -19,7 +19,7 @@ pipeline {
                 echo 'Removing old frontend container (if exists)'
                 sh 'docker rm -f frontend || true'
                 echo 'Building and running frontend container'
-                sh 'docker-compose -f "docker-compose.yml" up -d --build frontend'
+                sh 'docker compose -f "docker-compose.yml" up -d --build frontend'
             }
         }
         stage('Cleaning up') {
